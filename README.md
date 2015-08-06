@@ -1,2 +1,2 @@
-angular-perfect-parallax
+AngularJS Parallax
 ===

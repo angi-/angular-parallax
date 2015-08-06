@@ -1,6 +1,14 @@
-angular.module('perfectParallax', []).directive('perfectParallax', [
-  '$window', function ($window) {
+angular
+  /**
+   * Angular parallax module
+   */
+  .module('ngParallax', [])
 
+  /**
+   * Angular parallax directive
+   */
+  .directive('parallax', ['$window', function ($window)
+  {
     return {
       restrict: 'A',
       scope: {
@@ -8,17 +16,17 @@ angular.module('perfectParallax', []).directive('perfectParallax', [
         parallaxInitVal: '@',
         parallaxRatio: '@'
       },
-      link: function(iScope, iElem, iAttr) {
+      link: function(scope, elm, attr)
+      {
         var cssKey,
           cssValue,
           isSpecialVal,
           parallaxCssVal,
-          parallaxOffset,
           parallaxRatio,
           parallaxInitVal,
           cssValArray;
 
-        parallaxCssVal = iScope.parallaxCss ? iScope.parallaxCss : 'top';
+        parallaxCssVal = scope.parallaxCss ? scope.parallaxCss : 'top';
         cssValArray = parallaxCssVal.split(':');
         cssKey = cssValArray[0];
         cssValue = cssValArray[1];
@@ -26,26 +34,28 @@ angular.module('perfectParallax', []).directive('perfectParallax', [
         isSpecialVal = cssValue ? true : false;
         if (!cssValue) cssValue = cssKey;
 
-        parallaxRatio = iScope.parallaxRatio ? +iScope.parallaxRatio : 1.1;
-        parallaxInitVal = iScope.parallaxInitVal ? +iScope.parallaxInitVal : 0;
+        parallaxRatio = scope.parallaxRatio ? +scope.parallaxRatio : 1.1;
+        parallaxInitVal = scope.parallaxInitVal ? +scope.parallaxInitVal : 0;
 
-        iElem.css(cssKey, parallaxInitVal + 'px');
+        elm.css(cssKey, parallaxInitVal + 'px');
 
-        function _onScroll() {
-          var resultVal;
-          var calcVal = $window.pageYOffset * parallaxRatio + parallaxInitVal;
+        function _onScroll()
+        {
+          var
+            resultVal,
+            calcVal = $window.pageYOffset * parallaxRatio + parallaxInitVal;
 
           if (isSpecialVal) {
             resultVal = '' + cssValue + '(' + calcVal + 'px)';
           } else {
             resultVal = calcVal + 'px';
           }
-          iElem.css(cssKey, resultVal);
+
+          elm.css(cssKey, resultVal);
         };
 
         $window.addEventListener('scroll', _onScroll);
-
+        $window.addEventListener('touchmove', _onScroll);
       }
     };
-  }
-]);
+  }]);
