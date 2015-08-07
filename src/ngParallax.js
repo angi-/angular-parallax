@@ -11,22 +11,45 @@ angular
   {
     return {
       restrict: 'A',
-      scope: {
-        parallaxCss: '@',
-        parallaxInitVal: '@',
-        parallaxRatio: '@'
-      },
       link: function(scope, elm, attr)
       {
-        var cssKey,
+        var
+          /**
+           * CSS property key
+           */
+          cssKey,
+
+          /**
+           * CSS value
+           */
           cssValue,
+
+          /**
+           * Is the CSS value a special value?
+           */
           isSpecialVal,
+
+          /**
+           * Parallax CSS value
+           */
           parallaxCssVal,
+
+          /**
+           * Parallax scroll ratio
+           */
           parallaxRatio,
+
+          /**
+           * Parallax initial value
+           */
           parallaxInitVal,
+
+          /**
+           * Array containing css property and value
+           */
           cssValArray;
 
-        parallaxCssVal = scope.parallaxCss ? scope.parallaxCss : 'top';
+        parallaxCssVal = attr.parallaxCss ? attr.parallaxCss : 'top';
         cssValArray = parallaxCssVal.split(':');
         cssKey = cssValArray[0];
         cssValue = cssValArray[1];
@@ -34,8 +57,8 @@ angular
         isSpecialVal = cssValue ? true : false;
         if (!cssValue) cssValue = cssKey;
 
-        parallaxRatio = scope.parallaxRatio ? +scope.parallaxRatio : 1.1;
-        parallaxInitVal = scope.parallaxInitVal ? +scope.parallaxInitVal : 0;
+        parallaxRatio = attr.parallaxRatio ? +attr.parallaxRatio : 1.1;
+        parallaxInitVal = attr.parallaxInitVal ? +attr.parallaxInitVal : 0;
 
         elm.css(cssKey, parallaxInitVal + 'px');
 
