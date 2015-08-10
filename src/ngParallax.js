@@ -15,19 +15,19 @@ angular
       {
         var
           /**
-           * CSS property key
+           * CSS property that will be changed with scroll
            */
-          cssKey,
+          cssProperty,
 
           /**
            * CSS value
            */
-          cssValue,
+          cssFunction,
 
           /**
            * Is the CSS value a special value?
            */
-          isSpecialVal,
+          useCssFunction,
 
           /**
            * Parallax CSS value
@@ -40,62 +40,86 @@ angular
           parallaxRatio,
 
           /**
-           * Parallax initial value
+           * Position value at initiation
            */
           parallaxInitVal,
 
           /**
-           * Array containing css property and value
+           * CSS unit of measuremnt at initiation
            */
-          cssValArray;
+          parallaxInitUnit,
+
+          /**
+           * Array containing CSS property and special function
+           */
+          cssValArray,
+
+          /**
+           * CSS unit of measurement when scrolling
+           */
+          parallaxUseUnit;
 
         // Find out if parallax affects an element top position or CSS property
         parallaxCssVal = attr.parallaxCss ? attr.parallaxCss : 'top';
 
-        // Set the CSS key and value
+        // Set the CSS proprty and value
         cssValArray = parallaxCssVal.split(':');
-        cssKey = cssValArray[0];
-        cssValue = cssValArray[1];
+        cssProperty = cssValArray[0];
+        cssFunction = cssValArray[1];
 
-        isSpecialVal = cssValue ? true : false;
-        if ( ! cssValue) cssValue = cssKey;
+        // Check if function is used
+        useCssFunction = cssFunction ? true : false;
+        if ( ! cssFunction) cssFunction = cssProperty;
 
+        // Set parallax ratio
         parallaxRatio = attr.parallaxRatio ? +attr.parallaxRatio : 1.1;
+
+        // Set parallax initial value
         parallaxInitVal = attr.parallaxInitVal ? +attr.parallaxInitVal : 0;
 
-        elm.css(cssKey, parallaxInitVal + 'px');
+        // Set parallax initial unit
+        parallaxInitUnit = attr.parallaxInitUnit;
+
+        // Set paxallax calculated unit
+        parallaxUseUnit = attr.parallaxUseUnit;
+
+        // Set initial styling
+        elm.css(cssProperty, '' + parallaxInitVal + parallaxInitUnit);
 
         /**
          * Function called by the scroll and touch move events
          */
         function _onScroll()
         {
-          var
-            /**
-             * Result value applied to element's style
-             * @type string
-             */
-            resultVal,
+          /**
+           * Result value applied to element's style
+           * @type string
+           */
+          var resultVal;
 
-            /**
-             * Calculated value
-             * @type number
-             */
-            calcVal = $window.pageYOffset * parallaxRatio + parallaxInitVal;
-
-          if (isSpecialVal)
+          if (useCssFunction)
           {
-            // Special values
-            resultVal = '' + cssValue + '(' + calcVal + 'px)';
+            // CSS property updated by CSS function
+            if(cssFunction == 'calc')
+            {
+              var calcVal = $window.pageYOffset * parallaxRatio;
+              resultVal = 'calc(' + parallaxInitVal + parallaxInitUnit + ' + ' + calcVal + parallaxUseUnit + ')';
+            }
+            else
+            {
+              var calcVal = $window.pageYOffset * parallaxRatio + parallaxInitVal;
+              resultVal = '' + cssFunction + '(' + calcVal + parallaxUseUnit + ')';
+            }
           }
           else
           {
-            // Normal values
-            resultVal = calcVal + 'px';
+            // CSS property updated by value
+            var calcVal = $window.pageYOffset * parallaxRatio + parallaxInitVal;
+            resultVal = (calcVal > parallaxInitVal) ? '' + calcVal + parallaxUseUnit : '' + parallaxInitVal + parallaxInitUnit;
           }
 
           // Apply CSS
-          elm.css(cssKey, resultVal);
+          elm.css(cssProperty, resultVal);
         };
 
         // Listen for scroll and touch move events
