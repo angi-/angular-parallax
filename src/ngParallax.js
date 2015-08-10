@@ -84,12 +84,12 @@ angular
         parallaxUseUnit = attr.parallaxUseUnit;
 
         // Set initial styling
-        elm.css(cssProperty, '' + parallaxInitVal + parallaxInitUnit);
+        _update();
 
         /**
          * Function called by the scroll and touch move events
          */
-        function _onScroll()
+        function _update()
         {
           /**
            * Result value applied to element's style
@@ -123,8 +123,8 @@ angular
         };
 
         // Listen for scroll and touch move events
-        $window.addEventListener('scroll', _onScroll);
-        $window.addEventListener('touchmove', _onScroll);
+        $window.addEventListener('scroll', _update);
+        $window.addEventListener('touchmove', _update);
       }
     };
   }]);
