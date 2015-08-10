@@ -83,7 +83,7 @@ angular
         // Set paxallax calculated unit
         parallaxUseUnit = attr.parallaxUseUnit;
 
-        // Set initial styling
+        // Call an initial update
         _update();
 
         /**
@@ -91,6 +91,12 @@ angular
          */
         function _update()
         {
+          // Don't update if element is not in fold or visible
+          if( ! _isElementInFold() || elm[0].offsetParent === null)
+          {
+            return;
+          }
+
           /**
            * Result value applied to element's style
            * @type string
@@ -120,7 +126,16 @@ angular
 
           // Apply CSS
           elm.css(cssProperty, resultVal);
-        };
+        }
+
+        /**
+         * Checks if element is in the fold
+         * @return {bool}
+         */
+        function _isElementInFold()
+        {
+          return ($window.pageYOffset + $window.innerHeight >= elm[0].offsetTop && $window.pageYOffset <= elm[0].offsetTop + elm[0].offsetHeight);
+        }
 
         // Listen for scroll and touch move events
         $window.addEventListener('scroll', _update);
