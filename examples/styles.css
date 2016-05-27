@@ -19,6 +19,7 @@ h1 {
   position: relative;
   text-align: center;
   background-color: #121212;
+  transition: all .5s ease-in;
 }
 
 .jumbotron h1 {
@@ -29,4 +30,5 @@ h1 {
   -ms-transform: translate(0, -100%); /* IE 9 */
   -webkit-transform: translate(0, -100%); /* Safari */
   transform: translate(0, -100%);
+  text-shadow: 0 3px 0 red;
 }

@@ -7,7 +7,7 @@ angular
   /**
    * Angular parallax directive
    */
-  .directive('parallax', ['$window', function ($window)
+  .directive('parallax', ['$window', '$timeout', function ($window, $timeout)
   {
     return {
       restrict: 'A',
@@ -139,7 +139,11 @@ angular
 
         // Listen for scroll and touch move events
         $window.addEventListener('scroll', _update);
-        $window.addEventListener('touchmove', _update);
+        $window.addEventListener('touchstart touchmove', _update);
+
+        $timeout(function(evt) {
+          _update();
+        }, 100);
       }
     };
   }]);
